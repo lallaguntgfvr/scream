@@ -1,0 +1,862 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0c0a10">
+  <meta name="description" content="A tiny moonlit corner of the internet — a personal page about the things Mori loves.">
+  <title>mori's moonroom — a little world after dark</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #0b0910;
+      --panel: #141119;
+      --panel-raised: #191520;
+      --panel-soft: #201a27;
+      --line: #342b3b;
+      --line-light: #4a3a50;
+      --text: #f0eaf0;
+      --muted: #a89aaa;
+      --quiet: #7e7184;
+      --rose: #e4b2c9;
+      --rose-bright: #f0c7db;
+      --lilac: #b9add0;
+      --gold: #e7c9a8;
+      --green: #a8c5a5;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      --radius: 8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 26px; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      background:
+        radial-gradient(ellipse at 50% -10%, rgba(112, 75, 117, .17), transparent 48rem),
+        radial-gradient(ellipse at 2% 42%, rgba(72, 58, 97, .12), transparent 32rem),
+        var(--ink);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    body::before {
+      position: fixed;
+      z-index: -1;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      opacity: .23;
+      background-image:
+        radial-gradient(1px 1px at 7% 13%, #f2e3f2 99%, transparent),
+        radial-gradient(1px 1px at 18% 68%, #e4b2c9 99%, transparent),
+        radial-gradient(1px 1px at 32% 38%, #ded5f5 99%, transparent),
+        radial-gradient(1px 1px at 51% 16%, #f7e7d6 99%, transparent),
+        radial-gradient(1px 1px at 78% 53%, #ded5f5 99%, transparent),
+        radial-gradient(1px 1px at 91% 28%, #e4b2c9 99%, transparent),
+        radial-gradient(1px 1px at 88% 84%, #f2e3f2 99%, transparent);
+      background-size: 370px 310px;
+    }
+    a { color: inherit; }
+    button { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--rose-bright); outline-offset: 4px; }
+    ::selection { color: var(--ink); background: var(--rose-bright); }
+
+    .skip-link {
+      position: fixed;
+      z-index: 20;
+      top: 10px;
+      left: 10px;
+      padding: 8px 12px;
+      color: var(--ink);
+      background: var(--rose-bright);
+      transform: translateY(-150%);
+    }
+    .skip-link:focus { transform: translateY(0); }
+
+    .site-shell {
+      width: min(1160px, calc(100% - 48px));
+      margin: 24px auto 46px;
+    }
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 4px 12px;
+      color: var(--quiet);
+      font: 10px/1.4 var(--mono);
+      letter-spacing: .075em;
+      text-transform: uppercase;
+    }
+    .topline-left, .topline-right { display: flex; align-items: center; gap: 16px; }
+    .topline-mark { color: var(--rose); }
+    .online-dot, .live-dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      margin-right: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 12px rgba(168, 197, 165, .55);
+      vertical-align: 1px;
+    }
+
+    .site-header {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      min-height: 78px;
+      padding: 13px 23px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(20, 17, 25, .93);
+      box-shadow: 0 14px 44px rgba(0, 0, 0, .22);
+      backdrop-filter: blur(12px);
+    }
+    .brand {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 12px;
+      color: var(--text);
+      text-decoration: none;
+    }
+    .brand-glyph {
+      display: grid;
+      width: 43px;
+      height: 43px;
+      place-items: center;
+      border: 1px solid var(--line-light);
+      border-radius: 50%;
+      color: var(--rose-bright);
+      background: radial-gradient(circle at 36% 28%, #483149, #1a1420 72%);
+      font: 23px/1 var(--serif);
+      box-shadow: inset 0 0 16px rgba(228, 178, 201, .08), 0 0 22px rgba(228, 178, 201, .07);
+    }
+    .brand-name { display: block; font: 17px/1.1 var(--serif); letter-spacing: .045em; }
+    .brand-note { display: block; margin-top: 5px; color: var(--quiet); font: 9px/1 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+    .main-nav { display: flex; align-items: center; justify-content: center; gap: clamp(13px, 2.5vw, 32px); }
+    .main-nav a {
+      position: relative;
+      padding: 9px 0;
+      color: var(--muted);
+      font: 11px/1.2 var(--mono);
+      letter-spacing: .075em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color .2s ease;
+    }
+    .main-nav a::after {
+      position: absolute;
+      right: 0;
+      bottom: 3px;
+      left: 0;
+      height: 1px;
+      background: var(--rose);
+      content: "";
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform .2s ease;
+    }
+    .main-nav a:hover, .main-nav a[aria-current="location"] { color: var(--rose-bright); }
+    .main-nav a:hover::after, .main-nav a[aria-current="location"]::after { transform: scaleX(1); }
+    .crt-control {
+      display: inline-flex;
+      flex: 0 0 auto;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 0 11px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      color: var(--muted);
+      background: #100d15;
+      cursor: pointer;
+      font: 9px/1 var(--mono);
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      transition: border-color .2s, color .2s, background .2s;
+    }
+    .crt-control:hover { border-color: var(--line-light); color: var(--text); }
+    .toggle-state { color: var(--quiet); }
+    .crt-control[aria-checked="true"] .toggle-state { color: var(--green); }
+    .toggle-led { width: 6px; height: 6px; border-radius: 50%; background: #514654; }
+    .crt-control[aria-checked="true"] .toggle-led { background: var(--green); box-shadow: 0 0 9px rgba(168, 197, 165, .8); }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.02fr) minmax(330px, .98fr);
+      min-height: 560px;
+      margin-top: 16px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(90deg, rgba(20, 17, 25, .98) 0%, rgba(20, 17, 25, .96) 44%, rgba(20, 17, 25, .65) 100%),
+        var(--panel);
+      box-shadow: 0 28px 80px rgba(0, 0, 0, .26);
+    }
+    .hero::before {
+      position: absolute;
+      z-index: 0;
+      top: -80px;
+      left: 38%;
+      width: 380px;
+      height: 380px;
+      border: 1px solid rgba(228, 178, 201, .075);
+      border-radius: 50%;
+      content: "";
+      box-shadow: 0 0 0 45px rgba(228, 178, 201, .018), 0 0 0 90px rgba(228, 178, 201, .012);
+      pointer-events: none;
+    }
+    .hero-copy {
+      position: relative;
+      z-index: 2;
+      align-self: center;
+      padding: 62px 0 58px clamp(30px, 5.1vw, 68px);
+    }
+    .eyebrow, .section-kicker {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--rose);
+      font: 10px/1.3 var(--mono);
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .hero .eyebrow { margin-bottom: 23px; }
+    .hero h1 {
+      max-width: 590px;
+      margin: 0;
+      color: #f1e9ef;
+      font: 400 clamp(46px, 6.5vw, 79px)/.97 var(--serif);
+      letter-spacing: -.06em;
+    }
+    .hero h1 em { color: var(--rose); font-weight: 400; }
+    .hero h1 .star { display: inline-block; margin-left: 7px; color: var(--gold); font: 21px/1 var(--sans); vertical-align: top; transform: translateY(7px); }
+    .hero-intro {
+      max-width: 410px;
+      margin: 26px 0 0;
+      color: #b9aebc;
+      font-size: 14px;
+      line-height: 1.85;
+    }
+    .hero-intro strong { color: var(--text); font-weight: 500; }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 11px; margin-top: 28px; }
+    .button-primary, .button-quiet {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      min-height: 42px;
+      padding: 0 15px;
+      border: 1px solid var(--line-light);
+      border-radius: 4px;
+      color: var(--text);
+      font: 10px/1 var(--mono);
+      letter-spacing: .055em;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color .2s, background .2s, border-color .2s, transform .2s;
+    }
+    .button-primary { border-color: #8a617b; background: linear-gradient(135deg, #493143, #2d2234); color: #ffeaf4; }
+    .button-primary:hover { border-color: var(--rose); background: #593b50; transform: translateY(-2px); }
+    .button-quiet { border-color: transparent; color: var(--muted); }
+    .button-quiet:hover { border-color: var(--line); color: var(--rose-bright); }
+    .hero-facts { display: flex; flex-wrap: wrap; gap: 22px; margin-top: 36px; padding-top: 17px; border-top: 1px solid rgba(74, 58, 80, .68); }
+    .fact { display: flex; align-items: center; gap: 8px; color: var(--quiet); font: 9px/1.4 var(--mono); letter-spacing: .035em; text-transform: uppercase; }
+    .fact strong { display: block; color: #c8bacb; font-weight: 400; }
+    .fact-symbol { color: var(--rose); font-size: 13px; }
+
+    .hero-art {
+      position: relative;
+      z-index: 1;
+      align-self: stretch;
+      min-height: 560px;
+      padding: 21px 21px 21px 0;
+    }
+    .art-frame {
+      position: relative;
+      height: 100%;
+      min-height: 518px;
+      overflow: hidden;
+      border: 1px solid rgba(230, 204, 230, .19);
+      border-radius: 5px;
+      background: #201a29;
+      box-shadow: 0 18px 56px rgba(0, 0, 0, .4);
+    }
+    .art-frame::after {
+      position: absolute;
+      inset: 0;
+      border: 9px solid rgba(10, 8, 14, .1);
+      content: "";
+      pointer-events: none;
+    }
+    .art-frame img { display: block; width: 100%; height: 100%; min-height: 518px; object-fit: cover; object-position: 52% 40%; filter: saturate(.82) brightness(.82); }
+    .art-topline, .art-label {
+      position: absolute;
+      z-index: 2;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      color: #e9dce8;
+      font: 9px/1.4 var(--mono);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      text-shadow: 0 1px 8px rgba(0, 0, 0, .9);
+    }
+    .art-topline { top: 17px; right: 18px; left: 18px; }
+    .art-label { right: 18px; bottom: 17px; left: 18px; align-items: end; }
+    .art-label small { display: block; color: #dbc8dc; font-size: 8px; }
+    .art-label strong { color: #fff0f7; font: 15px/1.2 var(--serif); letter-spacing: .02em; }
+    .vertical-note {
+      position: absolute;
+      z-index: 2;
+      right: 7px;
+      bottom: 86px;
+      color: rgba(241, 226, 238, .75);
+      font: 8px/1 var(--mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+    .hero-ornament {
+      position: absolute;
+      z-index: 2;
+      top: 58px;
+      right: -13px;
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 1px solid rgba(228, 178, 201, .62);
+      border-radius: 50%;
+      color: var(--rose-bright);
+      background: #201723;
+      font: 19px/1 var(--serif);
+      box-shadow: 0 0 20px rgba(0, 0, 0, .4);
+    }
+
+    .below-hero {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 5px 17px;
+      color: var(--quiet);
+      font: 9px/1.4 var(--mono);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+    .below-hero span:last-child { color: var(--muted); }
+
+    .content-grid { display: grid; grid-template-columns: minmax(0, 1fr) 282px; align-items: start; gap: 16px; }
+    .main-column, .sidebar { display: grid; align-content: start; gap: 16px; min-width: 0; }
+    .panel {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(145deg, rgba(25, 21, 32, .97), rgba(18, 15, 22, .97));
+      box-shadow: 0 13px 38px rgba(0, 0, 0, .18);
+    }
+    .section-panel { padding: clamp(23px, 3.2vw, 36px); }
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-bottom: 23px;
+      padding-bottom: 13px;
+      border-bottom: 1px solid rgba(74, 58, 80, .62);
+    }
+    .section-head .section-kicker { margin: 0; }
+    .section-index { color: var(--quiet); font: 9px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .section-panel h2, .sidebar h2 {
+      margin: 0;
+      color: var(--text);
+      font: 400 clamp(28px, 3.5vw, 40px)/1.06 var(--serif);
+      letter-spacing: -.035em;
+    }
+    .section-panel h2 em { color: var(--rose); font-weight: 400; }
+    .about-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(210px, .85fr); gap: 27px; align-items: start; }
+    .about-copy { color: #b8adbb; font-size: 13px; line-height: 1.9; }
+    .about-copy p { margin: 15px 0 0; }
+    .about-copy p:first-child { margin-top: 0; }
+    .about-copy strong { color: #eadde8; font-weight: 500; }
+    .about-sidecard {
+      padding: 17px 17px 14px;
+      border: 1px solid rgba(74, 58, 80, .75);
+      border-radius: 5px;
+      background:
+        radial-gradient(circle at 100% 0%, rgba(135, 93, 135, .15), transparent 105px),
+        #131019;
+    }
+    .file-heading { display: flex; justify-content: space-between; gap: 10px; margin-bottom: 13px; color: var(--rose); font: 9px/1.3 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+    .file-heading span:last-child { color: var(--quiet); }
+    .profile-data { display: grid; gap: 10px; margin: 0; }
+    .profile-data div { display: grid; grid-template-columns: 75px 1fr; gap: 8px; align-items: baseline; }
+    .profile-data dt { color: var(--quiet); font: 9px/1.4 var(--mono); text-transform: uppercase; }
+    .profile-data dd { margin: 0; color: #d2c7d4; font-size: 11px; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 17px; }
+    .tag { padding: 4px 7px; border: 1px solid #3b3042; border-radius: 3px; color: #c7b6cc; background: #1b1621; font: 8px/1.2 var(--mono); letter-spacing: .03em; }
+    .quote-line { position: relative; margin: 24px 0 0; padding: 16px 20px 15px 42px; border-left: 1px solid #8a617b; color: #c6b8c8; background: rgba(34, 26, 39, .56); font: italic 16px/1.5 var(--serif); }
+    .quote-line::before { position: absolute; top: 11px; left: 14px; color: var(--rose); content: "“"; font: 30px/1 var(--serif); }
+
+    .interest-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; margin-top: 22px; }
+    .interest-card {
+      position: relative;
+      min-height: 126px;
+      padding: 17px 17px 16px;
+      overflow: hidden;
+      border: 1px solid #342a3b;
+      border-radius: 5px;
+      background: linear-gradient(140deg, rgba(33, 26, 39, .88), rgba(18, 15, 22, .85));
+      transition: border-color .2s, transform .2s, background .2s;
+    }
+    .interest-card:hover { transform: translateY(-2px); border-color: #705267; background: #211a28; }
+    .interest-card::after { position: absolute; right: -20px; bottom: -36px; width: 85px; height: 85px; border: 1px solid rgba(228, 178, 201, .08); border-radius: 50%; content: ""; }
+    .interest-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+    .interest-icon { color: var(--rose); font-size: 17px; line-height: 1; }
+    .interest-num { color: #76667b; font: 8px/1 var(--mono); }
+    .interest-card h3 { margin: 0; color: #e8dee8; font: 15px/1.2 var(--serif); font-weight: 400; }
+    .interest-card p { margin: 7px 0 0; color: var(--muted); font-size: 10px; line-height: 1.65; }
+
+    .guestbook-panel { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 20px; padding: 23px 26px; }
+    .guestbook-panel .section-kicker { margin: 0 0 7px; }
+    .guestbook-panel h2 { font-size: 25px; }
+    .guestbook-panel p { max-width: 510px; margin: 9px 0 0; color: var(--muted); font-size: 11px; }
+    .guestbook-cta { display: grid; justify-items: end; gap: 8px; }
+    .guestbook-cta small { color: var(--quiet); font: 8px/1.3 var(--mono); }
+
+    .side-panel { padding: 21px; }
+    .sidebar h2 { font-size: 24px; }
+    .side-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+    .side-heading .section-index { font-size: 8px; }
+    .status-card { background: linear-gradient(145deg, #201a28, #15111a); }
+    .status-intro { display: flex; align-items: center; gap: 13px; padding-bottom: 15px; border-bottom: 1px solid rgba(74, 58, 80, .6); }
+    .avatar-orbit { position: relative; display: grid; flex: 0 0 46px; width: 46px; height: 46px; place-items: center; border: 1px solid #594358; border-radius: 50%; color: var(--rose-bright); background: radial-gradient(circle at 40% 32%, #423045, #17121b 72%); font: 20px/1 var(--serif); }
+    .avatar-orbit::after { position: absolute; top: -3px; right: 0; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px rgba(168, 197, 165, .7); content: ""; }
+    .status-intro small { display: block; color: var(--quiet); font: 8px/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .status-intro strong { display: block; margin-top: 4px; color: #e7dce7; font: 15px/1.1 var(--serif); font-weight: 400; }
+    .status-note { margin: 14px 0 0; color: #b6a9ba; font-size: 11px; line-height: 1.65; }
+    .status-detail { display: flex; justify-content: space-between; gap: 10px; margin-top: 15px; color: var(--quiet); font: 8px/1.4 var(--mono); text-transform: uppercase; }
+    .battery { display: flex; gap: 3px; margin-top: 7px; }
+    .battery span { width: 20px; height: 6px; border: 1px solid #5b485d; background: #b88da8; }
+    .battery span:nth-child(n+3) { background: transparent; }
+
+    .now-list { display: grid; gap: 13px; margin: 0; }
+    .now-list div { display: grid; grid-template-columns: 25px 1fr; gap: 8px; align-items: start; }
+    .now-icon { color: var(--rose); font-size: 13px; line-height: 1.3; text-align: center; }
+    .now-list dt { color: var(--quiet); font: 8px/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
+    .now-list dd { margin: 4px 0 0; color: #d0c4d2; font-size: 10px; line-height: 1.45; }
+
+    .tiny-log { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+    .tiny-log li { position: relative; padding-left: 17px; color: #bdb0c0; font-size: 10px; line-height: 1.5; }
+    .tiny-log li::before { position: absolute; top: 6px; left: 1px; width: 6px; height: 6px; border: 1px solid #aa7e9c; border-radius: 50%; content: ""; }
+    .tiny-log time { display: block; margin-bottom: 2px; color: var(--quiet); font: 8px/1.2 var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+    .counter-box { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 18px; padding-top: 13px; border-top: 1px dashed #413345; }
+    .counter-box span:first-child { color: var(--quiet); font: 8px/1.4 var(--mono); letter-spacing: .07em; text-transform: uppercase; }
+    .counter { padding: 4px 7px; border: 1px solid #3e3444; border-radius: 3px; color: var(--green); background: #0e0d12; font: 10px/1.1 var(--mono); letter-spacing: .12em; }
+
+    .button-exchange { padding: 18px; }
+    .button-exchange .side-heading { margin-bottom: 12px; }
+    .web-button-row { display: flex; align-items: center; gap: 11px; }
+    .web-badge {
+      display: flex;
+      flex: 0 0 88px;
+      align-items: center;
+      justify-content: space-around;
+      width: 88px;
+      height: 31px;
+      padding: 3px 4px;
+      border: 1px solid #bd92b0;
+      border-radius: 2px;
+      color: #fff2fa;
+      background: linear-gradient(135deg, #543a57, #211725 64%, #382841);
+      box-shadow: inset 0 0 0 1px rgba(255, 231, 247, .12), 0 2px 8px rgba(0, 0, 0, .3);
+      font: 8px/1.05 var(--mono);
+      letter-spacing: .02em;
+      text-align: center;
+      text-decoration: none;
+      text-shadow: 0 1px 3px #000;
+      transition: filter .2s, transform .2s;
+    }
+    .web-badge:hover { filter: brightness(1.2); transform: translateY(-1px); }
+    .badge-moon { color: var(--rose-bright); font: 17px/1 var(--serif); }
+    .badge-copy { color: #d3c2d5; font: 7px/1.1 var(--mono); text-transform: uppercase; }
+    .badge-sparkle { align-self: flex-start; color: var(--gold); font: 9px/1 var(--serif); }
+    .badge-instructions { color: var(--muted); font-size: 9px; line-height: 1.45; }
+    .copy-button { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; padding: 0; border: 0; color: var(--rose); background: none; cursor: pointer; font: 8px/1.4 var(--mono); letter-spacing: .045em; text-transform: uppercase; }
+    .copy-button:hover { color: var(--rose-bright); }
+    .copy-feedback { min-height: 12px; margin: 5px 0 0; color: var(--green); font: 8px/1.4 var(--mono); }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      margin-top: 17px;
+      padding: 13px 5px 0;
+      border-top: 1px solid rgba(74, 58, 80, .5);
+      color: var(--quiet);
+      font: 9px/1.5 var(--mono);
+      letter-spacing: .03em;
+    }
+    .footer-heart { color: var(--rose); }
+    .footer a { color: var(--muted); text-decoration-color: #73566f; text-underline-offset: 3px; }
+    .footer a:hover { color: var(--rose-bright); }
+    .footer-right { text-align: right; }
+
+    /* Optional old-monitor overlay: enabled with the CRT button in the header. */
+    body.crt-mode::after {
+      position: fixed;
+      z-index: 15;
+      inset: 0;
+      background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(0, 0, 0, .19) 4px 5px);
+      content: "";
+      pointer-events: none;
+      opacity: .24;
+    }
+    body.crt-mode { filter: saturate(.91); }
+
+    @media (min-width: 1200px) {
+      .sidebar { position: sticky; top: 16px; }
+    }
+    @media (max-width: 980px) {
+      .site-shell { width: min(100% - 32px, 820px); }
+      .site-header { flex-wrap: wrap; }
+      .main-nav { order: 3; justify-content: flex-start; width: 100%; padding-top: 6px; border-top: 1px solid rgba(74, 58, 80, .45); }
+      .hero { grid-template-columns: minmax(0, 1.02fr) minmax(280px, .88fr); min-height: 510px; }
+      .hero-copy { padding: 48px 0 44px 34px; }
+      .hero-art { min-height: 510px; padding-top: 17px; padding-bottom: 17px; }
+      .art-frame, .art-frame img { min-height: 476px; }
+      .hero h1 { font-size: clamp(48px, 7vw, 68px); }
+      .content-grid { grid-template-columns: minmax(0, 1fr) 250px; gap: 12px; }
+      .main-column, .sidebar { gap: 12px; }
+      .side-panel { padding: 17px; }
+    }
+    @media (max-width: 700px) {
+      .site-shell { width: min(100% - 24px, 540px); margin-top: 14px; margin-bottom: 28px; }
+      .topline { margin: 0 2px 9px; font-size: 8px; }
+      .topline-left, .topline-right { gap: 9px; }
+      .topline-right span:first-child { display: none; }
+      .site-header { min-height: 68px; gap: 12px; padding: 11px 13px; }
+      .brand-glyph { width: 38px; height: 38px; }
+      .brand-name { font-size: 15px; }
+      .brand-note { font-size: 8px; }
+      .main-nav { gap: clamp(10px, 4vw, 24px); overflow-x: auto; padding-bottom: 2px; }
+      .main-nav a { font-size: 9px; }
+      .crt-control { margin-left: auto; padding: 0 9px; font-size: 8px; }
+      .hero { grid-template-columns: 1fr; min-height: 0; }
+      .hero::before { top: 295px; left: auto; right: -150px; width: 300px; height: 300px; }
+      .hero-copy { padding: 39px 26px 27px; }
+      .hero .eyebrow { margin-bottom: 19px; font-size: 9px; }
+      .hero h1 { font-size: clamp(52px, 12vw, 68px); }
+      .hero-intro { margin-top: 20px; font-size: 13px; }
+      .hero-actions { margin-top: 23px; }
+      .hero-facts { gap: 14px; margin-top: 25px; }
+      .fact { font-size: 8px; }
+      .hero-art { min-height: 0; padding: 0 15px 15px; }
+      .art-frame { height: 360px; min-height: 0; }
+      .art-frame img { height: 360px; min-height: 0; object-position: 50% 38%; }
+      .hero-ornament { top: 20px; right: 1px; width: 36px; height: 36px; font-size: 16px; }
+      .vertical-note { right: -7px; }
+      .below-hero { font-size: 8px; }
+      .content-grid { grid-template-columns: 1fr; }
+      .main-column, .sidebar { gap: 12px; }
+      .sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: stretch; }
+      .status-card { grid-column: 1 / -1; }
+      .side-panel { padding: 17px; }
+      .about-grid { grid-template-columns: 1fr; gap: 19px; }
+      .section-panel { padding: 24px 20px; }
+      .section-panel h2 { font-size: 34px; }
+      .guestbook-panel { grid-template-columns: 1fr; gap: 15px; padding: 22px 20px; }
+      .guestbook-cta { justify-items: start; }
+      .footer { align-items: flex-start; font-size: 8px; }
+    }
+    @media (max-width: 430px) {
+      .topline-right { display: none; }
+      .site-shell { width: calc(100% - 18px); }
+      .site-header { gap: 8px; }
+      .brand { gap: 8px; }
+      .brand-glyph { width: 34px; height: 34px; font-size: 19px; }
+      .brand-name { font-size: 14px; }
+      .main-nav { justify-content: space-between; gap: 9px; }
+      .crt-control { font-size: 7px; }
+      .hero-copy { padding-right: 20px; padding-left: 20px; }
+      .hero h1 { font-size: 51px; }
+      .hero-actions { gap: 6px; }
+      .button-primary, .button-quiet { min-height: 39px; padding: 0 10px; font-size: 8px; }
+      .hero-facts { gap: 11px; }
+      .art-frame, .art-frame img { height: 315px; }
+      .section-panel { padding: 21px 16px; }
+      .section-head { align-items: flex-start; }
+      .section-index { font-size: 8px; text-align: right; }
+      .interest-grid { gap: 7px; }
+      .interest-card { min-height: 132px; padding: 14px 12px; }
+      .sidebar { grid-template-columns: 1fr; }
+      .status-card { grid-column: auto; }
+      .footer { display: grid; }
+      .footer-right { text-align: left; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">skip to the page</a>
+  <div class="site-shell">
+    <div class="topline" aria-label="Site status">
+      <div class="topline-left"><span class="topline-mark">✳</span><span>independent web / personal archive</span><span><i class="online-dot"></i>connection dreamy</span></div>
+      <div class="topline-right"><span>best viewed after dark</span><time id="local-clock" aria-label="Your local time">--:--:--</time></div>
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Mori's moonroom — home">
+        <span class="brand-glyph" aria-hidden="true">☾</span>
+        <span><span class="brand-name">mori's moonroom</span><span class="brand-note">a little place to linger</span></span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#home" aria-current="location">home</a>
+        <a href="#about">about me</a>
+        <a href="#interests">little loves</a>
+        <a href="#guestbook">say hello</a>
+      </nav>
+      <button class="crt-control" id="crt-toggle" type="button" role="switch" aria-checked="false" aria-label="Toggle CRT scanline effect">
+        <span class="toggle-led" aria-hidden="true"></span><span>crt filter</span><span class="toggle-state" id="crt-state">off</span>
+      </button>
+    </header>
+
+    <main id="main">
+      <section class="hero" id="home" aria-labelledby="welcome-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>you found your way here</p>
+          <h1 id="welcome-title">a little<br><em>moonlit</em><br>corner<span class="star" aria-hidden="true">✳</span></h1>
+          <p class="hero-intro">Hi, I'm <strong>Mori</strong> — a daydreamer collecting little things that make life feel like a story. This is my quiet shelf for favorite worlds, passing thoughts, and whatever catches the moonlight.</p>
+          <div class="hero-actions">
+            <a class="button-primary" href="#about">get to know me <span aria-hidden="true">↘</span></a>
+            <a class="button-quiet" href="#interests">wander around <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="hero-facts" aria-label="A few quick details">
+            <div class="fact"><span class="fact-symbol" aria-hidden="true">♡</span><span>known as<strong>mori online</strong></span></div>
+            <div class="fact"><span class="fact-symbol" aria-hidden="true">☾</span><span>usually<strong>up too late</strong></span></div>
+            <div class="fact"><span class="fact-symbol" aria-hidden="true">⌁</span><span>status<strong>softly existing</strong></span></div>
+          </div>
+        </div>
+        <div class="hero-art">
+          <div class="art-frame">
+            <div class="art-topline"><span>no. 01 / night study</span><span>☾ &nbsp; 00:04 am</span></div>
+            <img src="assets/nocturne-mascot.jpg" alt="A wistful, silver-haired anime girl in a black lace dress holding a tiny bat plush beside a moonlit window">
+            <div class="art-label"><span><small>from the quiet hours</small><strong>somewhere between awake & dreaming</strong></span><span>✳</span></div>
+          </div>
+          <span class="vertical-note" aria-hidden="true">a small world of my own · 001</span>
+          <span class="hero-ornament" aria-hidden="true">✧</span>
+        </div>
+      </section>
+      <div class="below-hero"><span>↓ &nbsp; scroll a little, stay a while</span><span>handmade for the open web &nbsp; ♡</span></div>
+
+      <div class="content-grid">
+        <div class="main-column">
+          <section class="panel section-panel" id="about" aria-labelledby="about-title">
+            <div class="section-head">
+              <p class="section-kicker"><span aria-hidden="true">✳</span> 01 / the person behind the pixels</p>
+              <span class="section-index">a small introduction</span>
+            </div>
+            <h2 id="about-title">hello, from <em>my side</em> of the screen.</h2>
+            <div class="about-grid" style="margin-top: 21px;">
+              <div class="about-copy">
+                <p>I'm <strong>Mori</strong> online. A quiet collector of tiny things: old game cases, pretty screenshots, song lyrics that feel like letters, and bits of the internet that still feel handmade.</p>
+                <p>I love stories that leave a little ache behind — dreamy anime, odd little games, visual novels, and music for staring out the window. When I'm not wandering through fictional worlds, I'm usually making something, saving references, or rearranging this page for the hundredth time.</p>
+                <p>This site is a scrapbook more than a profile. It's where I can be earnest about the things I love, leave small notes for future-me, and make a corner of the web feel like <strong>mine</strong>. Thanks for visiting; I hope you find something that makes you smile.</p>
+              </div>
+              <div class="about-sidecard" aria-label="Mori's profile details">
+                <div class="file-heading"><span>little data file</span><span>mori.txt</span></div>
+                <dl class="profile-data">
+                  <div><dt>alias</dt><dd>mori / moonthing</dd></div>
+                  <div><dt>species</dt><dd>human, probably</dd></div>
+                  <div><dt>alignment</dt><dd>tender-hearted lurker</dd></div>
+                  <div><dt>found in</dt><dd>too many open tabs</dd></div>
+                  <div><dt>dreaming of</dt><dd>a quiet little life</dd></div>
+                </dl>
+                <div class="tag-list" aria-label="Interests">
+                  <span class="tag">anime</span><span class="tag">old web</span><span class="tag">story games</span><span class="tag">soft horror</span>
+                </div>
+              </div>
+            </div>
+            <blockquote class="quote-line">The internet is still a place you can decorate.</blockquote>
+          </section>
+
+          <section class="panel section-panel" id="interests" aria-labelledby="interests-title">
+            <div class="section-head">
+              <p class="section-kicker"><span aria-hidden="true">♡</span> 02 / things i keep close</p>
+              <span class="section-index">currently on repeat</span>
+            </div>
+            <h2 id="interests-title">little <em>loves</em> & obsessions.</h2>
+            <div class="interest-grid">
+              <article class="interest-card">
+                <div class="interest-top"><span class="interest-icon" aria-hidden="true">✧</span><span class="interest-num">01 / WATCH</span></div>
+                <h3>anime &amp; animation</h3>
+                <p>Soft colors, complicated girls, and endings that stay with you. Always saving one more to my list.</p>
+              </article>
+              <article class="interest-card">
+                <div class="interest-top"><span class="interest-icon" aria-hidden="true">⌖</span><span class="interest-num">02 / PLAY</span></div>
+                <h3>strange little games</h3>
+                <p>Dream logic, pixel worlds, quiet horror, and stories that feel like they were found in an old save file.</p>
+              </article>
+              <article class="interest-card">
+                <div class="interest-top"><span class="interest-icon" aria-hidden="true">♫</span><span class="interest-num">03 / LISTEN</span></div>
+                <h3>music for midnight</h3>
+                <p>Dream pop, shoegaze, soft piano, and a playlist for every possible weather inside my head.</p>
+              </article>
+              <article class="interest-card">
+                <div class="interest-top"><span class="interest-icon" aria-hidden="true">☷</span><span class="interest-num">04 / MAKE</span></div>
+                <h3>the personal web</h3>
+                <p>Handmade pages, pixel buttons, tiny shrines, and the joy of choosing every little detail myself.</p>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel guestbook-panel" id="guestbook" aria-labelledby="guestbook-title">
+            <div>
+              <p class="section-kicker"><span aria-hidden="true">✉</span> 03 / leave a little trace</p>
+              <h2 id="guestbook-title">you made it all this way.</h2>
+              <p>Thank you for stopping by my tiny corner of the web. Tell me what you love, recommend me something strange, or just leave a little hello.</p>
+            </div>
+            <div class="guestbook-cta">
+              <a class="button-primary" href="mailto:hello@example.com?subject=hello%20from%20your%20website">send a note <span aria-hidden="true">♡</span></a>
+              <small>or wave at me from afar</small>
+            </div>
+          </section>
+        </div>
+
+        <aside class="sidebar" aria-label="Side notes">
+          <section class="panel side-panel status-card" aria-labelledby="status-title">
+            <div class="side-heading"><p class="section-kicker" style="margin:0">✳ / field notes</p><span class="section-index">01</span></div>
+            <div class="status-intro">
+              <span class="avatar-orbit" aria-hidden="true">☾</span>
+              <span><small id="status-title">mori's status</small><strong>awake-ish, online</strong></span>
+            </div>
+            <p class="status-note">currently romanticizing a rainy evening and pretending my tabs are organized.</p>
+            <div class="status-detail"><span>social battery</span><span>2 / 5</span></div>
+            <div class="battery" aria-label="Social battery: two of five"><span></span><span></span><span></span><span></span><span></span></div>
+          </section>
+
+          <section class="panel side-panel" aria-labelledby="right-now-title">
+            <div class="side-heading"><h2 id="right-now-title">right now</h2><span class="section-index">02</span></div>
+            <dl class="now-list">
+              <div><span class="now-icon" aria-hidden="true">♫</span><span><dt>listening</dt><dd>the sound of distant rain</dd></span></div>
+              <div><span class="now-icon" aria-hidden="true">▤</span><span><dt>watching</dt><dd>something with a pretty ending</dd></span></div>
+              <div><span class="now-icon" aria-hidden="true">⌕</span><span><dt>thinking about</dt><dd>how nice it is to be here</dd></span></div>
+            </dl>
+          </section>
+
+          <section class="panel side-panel" aria-labelledby="updates-title">
+            <div class="side-heading"><h2 id="updates-title">tiny log</h2><span class="section-index">03</span></div>
+            <ul class="tiny-log">
+              <li><time>just now</time>you wandered in. welcome!</li>
+              <li><time>somewhere in the past</time>made this little page by hand.</li>
+              <li><time>in the future</time>more small things are on the way.</li>
+            </ul>
+            <div class="counter-box"><span>you are visitor no.</span><span class="counter">000 042</span></div>
+          </section>
+
+          <section class="panel button-exchange" aria-labelledby="button-title">
+            <div class="side-heading"><h2 id="button-title">trade buttons?</h2><span class="section-index">88 × 31</span></div>
+            <div class="web-button-row">
+              <a class="web-badge" href="#home" aria-label="Mori's moonroom — link back to this page"><span class="badge-moon" aria-hidden="true">☾</span><span class="badge-copy">mori's<br>moonroom</span><span class="badge-sparkle" aria-hidden="true">✧</span></a>
+              <span class="badge-instructions">Take my tiny button<br>and link back here ♡</span>
+            </div>
+            <button class="copy-button" id="copy-button" type="button"><span aria-hidden="true">▣</span> copy embed code</button>
+            <p class="copy-feedback" id="copy-feedback" aria-live="polite"></p>
+          </section>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div>made with <span class="footer-heart">♡</span>, late nights, and plain html / css / js</div>
+      <div class="footer-right"><span>no trackers, just vibes</span><br><a href="#home">back to the moonroom ↑</a></div>
+    </footer>
+  </div>
+
+  <script>
+    // Small, deliberately low-key comforts for a one-page personal site.
+    const clock = document.getElementById('local-clock');
+    const updateClock = () => {
+      if (!clock) return;
+      clock.textContent = new Intl.DateTimeFormat(undefined, {
+        hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+      }).format(new Date());
+    };
+    updateClock();
+    window.setInterval(updateClock, 1000);
+
+    const crtToggle = document.getElementById('crt-toggle');
+    const crtState = document.getElementById('crt-state');
+    try {
+      if (localStorage.getItem('moonroom-crt') === 'on') {
+        document.body.classList.add('crt-mode');
+        crtToggle.setAttribute('aria-checked', 'true');
+        crtState.textContent = 'on';
+      }
+    } catch (_) { /* local storage may be unavailable; the toggle still works */ }
+    crtToggle.addEventListener('click', () => {
+      const enabled = document.body.classList.toggle('crt-mode');
+      crtToggle.setAttribute('aria-checked', String(enabled));
+      crtState.textContent = enabled ? 'on' : 'off';
+      try { localStorage.setItem('moonroom-crt', enabled ? 'on' : 'off'); } catch (_) { /* ignore */ }
+    });
+
+    const navLinks = [...document.querySelectorAll('.main-nav a')];
+    const sections = navLinks.map(link => document.querySelector(link.getAttribute('href'))).filter(Boolean);
+    if ('IntersectionObserver' in window) {
+      const navObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          navLinks.forEach(link => {
+            if (link.getAttribute('href') === `#${entry.target.id}`) link.setAttribute('aria-current', 'location');
+            else link.removeAttribute('aria-current');
+          });
+        });
+      }, { rootMargin: '-30% 0px -55% 0px' });
+      sections.forEach(section => navObserver.observe(section));
+    }
+
+    const copyButton = document.getElementById('copy-button');
+    const copyFeedback = document.getElementById('copy-feedback');
+    const badgeCode = '<a href="https://yourname.neocities.org/" title="mori\'s moonroom" style="display:inline-block;width:88px;height:31px;line-height:31px;text-align:center;border:1px solid #bd92b0;background:#302338;color:#fff2fa;font:8px monospace;text-decoration:none;">☾ mori\'s moonroom ✧</a>';
+    copyButton.addEventListener('click', async () => {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(badgeCode);
+        } else {
+          const temp = document.createElement('textarea');
+          temp.value = badgeCode;
+          temp.setAttribute('readonly', '');
+          temp.style.position = 'fixed';
+          temp.style.opacity = '0';
+          document.body.appendChild(temp);
+          temp.select();
+          document.execCommand('copy');
+          temp.remove();
+        }
+        copyFeedback.textContent = 'copied! replace the demo link with your URL.';
+      } catch (_) {
+        copyFeedback.textContent = 'copy failed — you can copy the button code from the page source.';
+      }
+    });
+  </script>
+</body>
+</html>
